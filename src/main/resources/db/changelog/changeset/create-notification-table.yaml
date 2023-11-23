@@ -43,5 +43,5 @@ databaseChangeLog:
         - addDefaultValue:
             columnDataType: timestamp
             columnName: created_at
-            defaultValue: now()
+            defaultValueComputed: now()
             tableName: notification
