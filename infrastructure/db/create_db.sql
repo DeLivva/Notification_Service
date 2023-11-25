@@ -1,1 +1,1 @@
-CREATE DATABASE notification_service_db;
+CREATE DATABASE delivva_notification_db;
