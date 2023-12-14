@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: delete-notification-type-table
+      author: Hasilbek
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: notification
+            constraintName: notification_type_id_fk
+        - dropTable:
+            tableName: notification_type
+
+  - changeSet:
+      id: drop-type-table
+      author: Hasilbek
+      changes:
+        - dropColumn:
+            tableName: notification
+            columnName: type_id
+
+  - changeSet:
+      id: add-notification-type
+      author: Hasilbek
+      changes:
+        - addColumn:
+            tableName: notification
+            columns:
+              - column:
+                  name: type
+                  type: varchar(255)
+
