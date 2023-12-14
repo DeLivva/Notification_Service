@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif;">
+<div style="max-width: 600px; margin: auto; padding: 20px; text-align: center; background-color: #f4f4f4; border-radius: 10px;">
+    <h2 style="color: #333;">Confirm your email</h2>
+    <p style="color: #666;">Please click on the button to confirm your email:</p>
+    <a th:href="${link}" style="text-decoration: none;">
+        <button style="display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Confirm</button>
+    </a>
+</div>
+</body>
+</html>
