@@ -30,4 +30,4 @@ spring:
 
 rabbitmq:
   queue:
-    authorization-service: authorization_service_queue
+    notification-service: notification_service_queue

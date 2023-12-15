@@ -1,6 +1,7 @@
 package com.vention.notification_service.service.impl;
 
 import com.vention.notification_service.dto.ConfirmationTokenDto;
+import com.vention.notification_service.dto.DisputeCreatedNotificationDTO;
 import com.vention.notification_service.service.MailSendingService;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
@@ -36,6 +37,11 @@ public class MailSendingServiceImpl implements MailSendingService {
         } catch (MessagingException e) {
             log.error("Error occurred while sending confirmation token: ", e);
         }
+    }
+
+    @Override
+    public void sendDisputeCreationMessage(DisputeCreatedNotificationDTO disputeCreationDto) {
+        // sends requests to core service to get emails, then sends notifications to them
     }
 
     private String generateConfirmationLink(ConfirmationTokenDto tokenDto) {
