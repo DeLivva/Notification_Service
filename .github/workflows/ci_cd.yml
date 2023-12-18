@@ -24,22 +24,23 @@ jobs:
           name: artifact
           path: target/authorization_service-0.0.1-SNAPSHOT.jar
 
-#  deploy:
-#    needs: build
-#    name: deploy
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download JAR
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: artifact
-#
-#      - name: Deploy project to AWS
-#        uses: einaregilsson/beanstalk-deploy@v20
-#        with:
-#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-#          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-#          application_name: delivva-testing-environment
-#          version_label: ${{ github.SHA }}
-#          region: eu-north-1
-#          deployment_package: Notification_Service-0.0.1-SNAPSHOT.jar
+  deploy:
+    needs: build
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JAR
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+
+      - name: DDeploy project to AWS
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: notification-service
+          environment_name: notification-service-env
+          version_label: ${{ github.SHA }}
+          region: eu-north-1
+          deployment_package: Notification_Service-0.0.1-SNAPSHOT.jar
