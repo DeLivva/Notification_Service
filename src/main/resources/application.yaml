@@ -2,9 +2,9 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://delivva-notification-service.cq4rmadfc3cu.eu-north-1.rds.amazonaws.com:5432/notification_db
+    username: delivva
+    password: password
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
@@ -31,3 +31,4 @@ spring:
 rabbitmq:
   queue:
     authorization-service: authorization_service_queue
+    dispute-service: dispute_service_queue

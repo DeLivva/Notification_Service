@@ -2,6 +2,7 @@ package com.vention.notification_service.service.rabbitmq.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vention.notification_service.dto.ConfirmationTokenDto;
+import com.vention.notification_service.dto.DisputeCreatedNotificationDTO;
 import com.vention.notification_service.dto.GeneralDto;
 import com.vention.notification_service.domain.NotificationType;
 import com.vention.notification_service.service.MailSendingService;
@@ -23,6 +24,18 @@ public class RabbitMQConsumer {
         if (Objects.requireNonNull(messageType) == NotificationType.CONFIRMATION_TOKEN) {
             ConfirmationTokenDto confirmationTokenDto = objectMapper.convertValue(generalDto.getData(), ConfirmationTokenDto.class);
             mailSendingService.sendConfirmationToken(confirmationTokenDto);
+        } else if (Objects.requireNonNull(messageType) == NotificationType.DISPUTE_CREATION) {
+            DisputeCreatedNotificationDTO disputeCreationDto = objectMapper.convertValue(generalDto.getData(), DisputeCreatedNotificationDTO.class);
+            mailSendingService.sendDisputeCreationMessage(disputeCreationDto);
+        }
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.dispute-service}")
+    public void processDisputeCreationMessage(GeneralDto<?> generalDto) {
+        NotificationType messageType = generalDto.getType();
+        if (Objects.requireNonNull(messageType) == NotificationType.DISPUTE_CREATION) {
+            DisputeCreatedNotificationDTO disputeCreationDto = objectMapper.convertValue(generalDto.getData(), DisputeCreatedNotificationDTO.class);
+            mailSendingService.sendDisputeCreationMessage(disputeCreationDto);
         }
     }
 }

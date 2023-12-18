@@ -22,10 +22,10 @@ import static com.vention.notification_service.config.RabbitConstants.CORE_SERVI
 import static com.vention.notification_service.config.RabbitConstants.CORE_SERVICE_ROUTING_KEY;
 import static com.vention.notification_service.config.RabbitConstants.DIRECT_ERROR_EXCHANGE_NAME;
 import static com.vention.notification_service.config.RabbitConstants.DIRECT_EXCHANGE_NAME;
-import static com.vention.notification_service.config.RabbitConstants.DISPUTE_CREATION_ERROR_QUEUE;
-import static com.vention.notification_service.config.RabbitConstants.DISPUTE_CREATION_ERROR_ROUTING_KEY;
-import static com.vention.notification_service.config.RabbitConstants.DISPUTE_CREATION_QUEUE;
-import static com.vention.notification_service.config.RabbitConstants.DISPUTE_CREATION_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ERROR_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ERROR_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ROUTING_KEY;
 
 @Configuration
 @RequiredArgsConstructor
@@ -69,9 +69,9 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue disputeServiceQueue() {
-        return QueueBuilder.durable(DISPUTE_CREATION_QUEUE)
+        return QueueBuilder.durable(DISPUTE_SERVICE_QUEUE)
                 .withArgument("x-dead-letter-exchange", DIRECT_ERROR_EXCHANGE_NAME)
-                .withArgument("x-dead-letter-routing-key", DISPUTE_CREATION_ERROR_ROUTING_KEY).build();
+                .withArgument("x-dead-letter-routing-key", DISPUTE_SERVICE_ERROR_ROUTING_KEY).build();
     }
 
     /**
@@ -89,7 +89,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue disputeServiceErrorQueue() {
-        return QueueBuilder.durable(DISPUTE_CREATION_ERROR_QUEUE).build();
+        return QueueBuilder.durable(DISPUTE_SERVICE_ERROR_QUEUE).build();
     }
 
     /**
@@ -102,7 +102,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding bindingDisputeServiceQueue() {
-        return BindingBuilder.bind(disputeServiceQueue()).to(getNotificationExchange()).with(DISPUTE_CREATION_ROUTING_KEY);
+        return BindingBuilder.bind(disputeServiceQueue()).to(getNotificationExchange()).with(DISPUTE_SERVICE_ROUTING_KEY);
     }
 
     @Bean
@@ -124,7 +124,7 @@ public class RabbitMQConfig {
     public Binding bindingDisputeServiceErrorQueue() {
         return BindingBuilder.bind(disputeServiceErrorQueue())
                 .to(getNotificationErrorExchange())
-                .with(DISPUTE_CREATION_ERROR_ROUTING_KEY);
+                .with(DISPUTE_SERVICE_ERROR_ROUTING_KEY);
     }
 
     @Bean
