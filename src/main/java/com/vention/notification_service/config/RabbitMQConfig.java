@@ -12,12 +12,20 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.vention.notification_service.config.RabbitConstants.AUTHORIZATION_SERVICE_ERROR_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.AUTHORIZATION_SERVICE_ERROR_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.AUTHORIZATION_SERVICE_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.AUTHORIZATION_SERVICE_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.CORE_SERVICE_ERROR_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.CORE_SERVICE_ERROR_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.CORE_SERVICE_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.CORE_SERVICE_ROUTING_KEY;
 import static com.vention.notification_service.config.RabbitConstants.DIRECT_ERROR_EXCHANGE_NAME;
 import static com.vention.notification_service.config.RabbitConstants.DIRECT_EXCHANGE_NAME;
-import static com.vention.notification_service.config.RabbitConstants.NOTIFICATION_SERVICE_ERROR_QUEUE;
-import static com.vention.notification_service.config.RabbitConstants.NOTIFICATION_SERVICE_ERROR_ROUTING_KEY;
-import static com.vention.notification_service.config.RabbitConstants.NOTIFICATION_SERVICE_QUEUE;
-import static com.vention.notification_service.config.RabbitConstants.NOTIFICATION_SERVICE_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ERROR_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ERROR_ROUTING_KEY;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_QUEUE;
+import static com.vention.notification_service.config.RabbitConstants.DISPUTE_SERVICE_ROUTING_KEY;
 
 @Configuration
 @RequiredArgsConstructor
@@ -43,37 +51,86 @@ public class RabbitMQConfig {
     }
 
     /**
-     * DECLARING QUEUE
+     * DECLARING QUEUES
      */
     @Bean
-    public Queue notificationServiceQueue() {
-        return QueueBuilder.durable(NOTIFICATION_SERVICE_QUEUE)
+    public Queue authorizationServiceQueue() {
+        return QueueBuilder.durable(AUTHORIZATION_SERVICE_QUEUE)
                 .withArgument("x-dead-letter-exchange", DIRECT_ERROR_EXCHANGE_NAME)
-                .withArgument("x-dead-letter-routing-key",NOTIFICATION_SERVICE_ERROR_ROUTING_KEY).build();
+                .withArgument("x-dead-letter-routing-key", AUTHORIZATION_SERVICE_ERROR_ROUTING_KEY).build();
     }
-    /**
-     * DECLARING ERROR QUEUE
-     */
+
     @Bean
-    public Queue notificationServiceErrorQueue() {
-        return QueueBuilder.durable(NOTIFICATION_SERVICE_ERROR_QUEUE).build();
+    public Queue coreServiceQueue() {
+        return QueueBuilder.durable(CORE_SERVICE_QUEUE)
+                .withArgument("x-dead-letter-exchange", DIRECT_ERROR_EXCHANGE_NAME)
+                .withArgument("x-dead-letter-routing-key", CORE_SERVICE_ERROR_ROUTING_KEY).build();
+    }
+
+    @Bean
+    public Queue disputeServiceQueue() {
+        return QueueBuilder.durable(DISPUTE_SERVICE_QUEUE)
+                .withArgument("x-dead-letter-exchange", DIRECT_ERROR_EXCHANGE_NAME)
+                .withArgument("x-dead-letter-routing-key", DISPUTE_SERVICE_ERROR_ROUTING_KEY).build();
     }
 
     /**
-     * BINDING QUEUE
+     * DECLARING ERROR QUEUES
      */
     @Bean
-    public Binding bindingNotificationServiceQueue() {
-        return BindingBuilder.bind(notificationServiceQueue()).to(getNotificationExchange()).with(NOTIFICATION_SERVICE_ROUTING_KEY);
+    public Queue authorizationServiceErrorQueue() {
+        return QueueBuilder.durable(AUTHORIZATION_SERVICE_ERROR_QUEUE).build();
+    }
+
+    @Bean
+    public Queue coreServiceErrorQueue() {
+        return QueueBuilder.durable(CORE_SERVICE_ERROR_QUEUE).build();
+    }
+
+    @Bean
+    public Queue disputeServiceErrorQueue() {
+        return QueueBuilder.durable(DISPUTE_SERVICE_ERROR_QUEUE).build();
     }
 
     /**
-     * BINDING ERROR QUEUE
+     * BINDING QUEUES
      */
     @Bean
-    public Binding bindingNotificationServiceErrorQueue() {
-        return BindingBuilder.bind(notificationServiceErrorQueue())
+    public Binding bindingAuthorizationServiceQueue() {
+        return BindingBuilder.bind(authorizationServiceQueue()).to(getNotificationExchange()).with(AUTHORIZATION_SERVICE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding bindingDisputeServiceQueue() {
+        return BindingBuilder.bind(disputeServiceQueue()).to(getNotificationExchange()).with(DISPUTE_SERVICE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding bindingCoreServiceQueue() {
+        return BindingBuilder.bind(coreServiceQueue()).to(getNotificationExchange()).with(CORE_SERVICE_ROUTING_KEY);
+    }
+
+    /**
+     * BINDING ERROR QUEUES
+     */
+    @Bean
+    public Binding bindingAuthorizationServiceErrorQueue() {
+        return BindingBuilder.bind(authorizationServiceErrorQueue())
                 .to(getNotificationErrorExchange())
-                .with(NOTIFICATION_SERVICE_ERROR_ROUTING_KEY);
+                .with(AUTHORIZATION_SERVICE_ERROR_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding bindingDisputeServiceErrorQueue() {
+        return BindingBuilder.bind(disputeServiceErrorQueue())
+                .to(getNotificationErrorExchange())
+                .with(DISPUTE_SERVICE_ERROR_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding bindingCoreServiceErrorQueue() {
+        return BindingBuilder.bind(coreServiceErrorQueue())
+                .to(getNotificationErrorExchange())
+                .with(CORE_SERVICE_ERROR_ROUTING_KEY);
     }
 }

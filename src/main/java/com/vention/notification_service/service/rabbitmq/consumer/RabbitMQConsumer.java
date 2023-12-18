@@ -18,13 +18,22 @@ public class RabbitMQConsumer {
     private final MailSendingService mailSendingService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @RabbitListener(queues = "${rabbitmq.queue.notification-service}")
+    @RabbitListener(queues = "${rabbitmq.queue.authorization-service}")
     public void processConfirmationTokenMessage(GeneralDto<?> generalDto) {
         NotificationType messageType = generalDto.getType();
         if (Objects.requireNonNull(messageType) == NotificationType.CONFIRMATION_TOKEN) {
             ConfirmationTokenDto confirmationTokenDto = objectMapper.convertValue(generalDto.getData(), ConfirmationTokenDto.class);
             mailSendingService.sendConfirmationToken(confirmationTokenDto);
         } else if (Objects.requireNonNull(messageType) == NotificationType.DISPUTE_CREATION) {
+            DisputeCreatedNotificationDTO disputeCreationDto = objectMapper.convertValue(generalDto.getData(), DisputeCreatedNotificationDTO.class);
+            mailSendingService.sendDisputeCreationMessage(disputeCreationDto);
+        }
+    }
+
+    @RabbitListener(queues = "${rabbitmq.queue.dispute-service}")
+    public void processDisputeCreationMessage(GeneralDto<?> generalDto) {
+        NotificationType messageType = generalDto.getType();
+        if (Objects.requireNonNull(messageType) == NotificationType.DISPUTE_CREATION) {
             DisputeCreatedNotificationDTO disputeCreationDto = objectMapper.convertValue(generalDto.getData(), DisputeCreatedNotificationDTO.class);
             mailSendingService.sendDisputeCreationMessage(disputeCreationDto);
         }
