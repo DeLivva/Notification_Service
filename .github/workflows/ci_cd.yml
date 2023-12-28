@@ -34,7 +34,7 @@ jobs:
         with:
           name: artifact
 
-      - name: DDeploy project to AWS
+      - name: Deploy project to AWS
         uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
