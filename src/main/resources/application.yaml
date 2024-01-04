@@ -2,17 +2,17 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5432/notification_service_db
-    username: postgres
-    password: adminroot
+    url: jdbc:postgresql://delivva-notification-service.cq4rmadfc3cu.eu-north-1.rds.amazonaws.com:5432/notification_db
+    username: delivva
+    password: password
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
-#  rabbitmq:
-#    username: Delivva
-#    password: delivvadevelopers4
-#    addresses: amqps://b-24e330b5-34c3-48c1-87df-d65aefcd7ec3.mq.us-east-1.amazonaws.com:5671
+  rabbitmq:
+    username: Delivva
+    password: delivvadevelopers4
+    addresses: amqps://b-24e330b5-34c3-48c1-87df-d65aefcd7ec3.mq.us-east-1.amazonaws.com:5671
 
   mail:
     host: smtp.gmail.com
@@ -27,8 +27,6 @@ spring:
         smtp:
           starttls:
             enable: true
-  jpa:
-    show-sql: true
 
 rabbitmq:
   queue:
