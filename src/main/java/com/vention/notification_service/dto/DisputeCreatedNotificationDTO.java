@@ -2,6 +2,8 @@ package com.vention.notification_service.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class DisputeCreatedNotificationDTO {
     private Long disputeId;
@@ -9,4 +11,5 @@ public class DisputeCreatedNotificationDTO {
     private String ownerName;
     private String driverName;
     private String description;
+    private List<String> adminEmails;
 }

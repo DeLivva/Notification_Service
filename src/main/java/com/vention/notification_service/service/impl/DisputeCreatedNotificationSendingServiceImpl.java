@@ -26,13 +26,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DisputeCreatedNotificationSendingServiceImpl implements MailSendingService {
     private static final Logger log = LoggerFactory.getLogger(DisputeCreatedNotificationSendingServiceImpl.class);
+    private static final String HEADER_TEXT = "Dispute was created for order number #%d.";
+    private static final String FROM_TO = "Dispute was generated from %s to %s.";
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
     private final NotificationType type = NotificationType.DISPUTE_CREATION;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String HEADER_TEXT = "Dispute was created for order number #%d.";
-    private static final String FROM_TO = "Dispute was generated from %s to %s.";
 
     @Async
     @Override
@@ -56,6 +56,25 @@ public class DisputeCreatedNotificationSendingServiceImpl implements MailSending
             log.warn("Error occurred while sending email: " + email);
             log.warn(e.getLocalizedMessage());
         }
+        // send dispute notification to admins
+
+        System.out.println(data.getAdminEmails());
+        for (String e : data.getAdminEmails()) {
+            try {
+                MimeMessage mailMessage = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
+
+                helper.setTo(e);
+                helper.setSubject("Dispute created");
+                helper.setText(createDisputeCreatedMessage(data.getOrderId(), disputeLink,
+                        data.getDescription(), data.getOwnerName(), data.getDriverName()), true);
+                mailSender.send(mailMessage);
+                log.info("Sent email to admin " + e);
+            } catch (MessagingException ex) {
+                log.warn("Error occurred while sending email: " + e);
+                log.warn(ex.getLocalizedMessage());
+            }
+        }
     }
 
     @Override
@@ -78,9 +97,7 @@ public class DisputeCreatedNotificationSendingServiceImpl implements MailSending
         return url + "?orderId=" + orderId;
     }
 
-    private String createDisputeCreatedMessage(Long orderId, String link,
-                                               String description,
-                                               String from, String to) {
+    private String createDisputeCreatedMessage(Long orderId, String link, String description, String from, String to) {
         Context context = new Context();
         context.setVariable("link", link);
         context.setVariable("headerText", String.format(HEADER_TEXT, orderId));
