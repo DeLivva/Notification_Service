@@ -20,23 +20,27 @@ public class RabbitMQConsumer {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @RabbitListener(queues = "${rabbitmq.queue.authorization-service}")
-    public void processConfirmationTokenMessage(String msg){
-        convertToNotificationDTOAndSave(msg);
+    public void processConfirmationTokenMessage(GeneralDto<?> generalDto){
+        convertToNotificationDTOAndSave(generalDto);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.dispute-service}")
-    public void processDisputeCreationMessage(String msg) {
-        convertToNotificationDTOAndSave(msg);
+    public void processDisputeCreationMessage(GeneralDto<?> generalDto) {
+        convertToNotificationDTOAndSave(generalDto);
     }
 
-    private void convertToNotificationDTOAndSave(String msg) {
+    @RabbitListener(queues = "${rabbitmq.queue.core-service}")
+    public void processOrderStatusUpdateMessage(GeneralDto<?> generalDto){
+        convertToNotificationDTOAndSave(generalDto);
+    }
+
+    private void convertToNotificationDTOAndSave(GeneralDto<?> generalDto) {
         try {
-            GeneralDto<?> generalDto = objectMapper.readValue(msg, GeneralDto.class);
             Map body = (Map) generalDto.getBody();
             NotificationDTO dto = NotificationDTO.builder()
                     .title((String) body.get("title"))
+                    .email((String) body.get("email"))
                     .data(objectMapper.readValue(objectMapper.writeValueAsString(body.get("data")), Map.class))
-                    .email(body.get("email").toString())
                     .build();
             service.save(dto, generalDto.getType(), false);
         } catch (JsonProcessingException e) {

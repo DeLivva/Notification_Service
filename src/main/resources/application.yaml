@@ -32,3 +32,4 @@ rabbitmq:
   queue:
     authorization-service: authorization_service_queue
     dispute-service: dispute_service_queue
+    core-service: core_service_queue

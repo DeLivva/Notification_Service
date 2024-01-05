@@ -1,0 +1,10 @@
+package com.vention.notification_service.dto;
+
+import lombok.Data;
+
+@Data
+public class OrderStatusChangeDto {
+    private String trackNumber;
+    private String driverEmail;
+    private String status;
+}

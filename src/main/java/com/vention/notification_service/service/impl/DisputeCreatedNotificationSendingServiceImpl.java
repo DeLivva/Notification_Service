@@ -37,43 +37,34 @@ public class DisputeCreatedNotificationSendingServiceImpl implements MailSending
     @Async
     @Override
     public void send(NotificationEntity notification) {
-        String email = notification.getEmail();
         DisputeCreatedNotificationDTO data = getObjectValues(notification.getData());
         String disputeLink = generateGetDisputeLink(Objects.requireNonNull(data).getOrderId());
+        String subject = "Dispute created";
+
+        // Send notification to courier
+        sendEmail(notification.getEmail(), subject, createDisputeCreatedMessage(disputeLink, data), notification);
+
+        // Send dispute notification to admins
+        for (String adminEmail : data.getAdminEmails()) {
+            sendEmail(adminEmail, subject, createDisputeCreatedMessage(disputeLink, data), notification);
+        }
+    }
+
+    private void sendEmail(String emailTo, String subject, String text, NotificationEntity notification) {
         try {
             MimeMessage mailMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
 
-            helper.setTo(email);
-            helper.setSubject("Dispute created");
-            helper.setText(createDisputeCreatedMessage(data.getOrderId(), disputeLink,
-                    data.getDescription(), data.getOwnerName(), data.getDriverName()), true);
+            helper.setTo(emailTo);
+            helper.setSubject(subject);
+            helper.setText(text, true);
 
             mailSender.send(mailMessage);
             service.makeSent(notification);
-            log.info("Sent email to " + email);
+            log.info("Sent email to " + emailTo);
         } catch (MessagingException e) {
-            log.warn("Error occurred while sending email: " + email);
+            log.warn("Error occurred while sending email: " + emailTo);
             log.warn(e.getLocalizedMessage());
-        }
-        // send dispute notification to admins
-
-        System.out.println(data.getAdminEmails());
-        for (String e : data.getAdminEmails()) {
-            try {
-                MimeMessage mailMessage = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
-
-                helper.setTo(e);
-                helper.setSubject("Dispute created");
-                helper.setText(createDisputeCreatedMessage(data.getOrderId(), disputeLink,
-                        data.getDescription(), data.getOwnerName(), data.getDriverName()), true);
-                mailSender.send(mailMessage);
-                log.info("Sent email to admin " + e);
-            } catch (MessagingException ex) {
-                log.warn("Error occurred while sending email: " + e);
-                log.warn(ex.getLocalizedMessage());
-            }
         }
     }
 
@@ -97,12 +88,12 @@ public class DisputeCreatedNotificationSendingServiceImpl implements MailSending
         return url + "?orderId=" + orderId;
     }
 
-    private String createDisputeCreatedMessage(Long orderId, String link, String description, String from, String to) {
+    private String createDisputeCreatedMessage(String link, DisputeCreatedNotificationDTO data) {
         Context context = new Context();
         context.setVariable("link", link);
-        context.setVariable("headerText", String.format(HEADER_TEXT, orderId));
-        context.setVariable("description", description);
-        context.setVariable("disputeFromTo", String.format(FROM_TO, from, to));
+        context.setVariable("headerText", String.format(HEADER_TEXT, data.getOrderId()));
+        context.setVariable("description", data.getDescription());
+        context.setVariable("disputeFromTo", String.format(FROM_TO, data.getOwnerName(), data.getDriverName()));
         return templateEngine.process("dispute-created", context);
     }
 }
