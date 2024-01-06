@@ -2,7 +2,7 @@ package com.vention.notification_service.service.rabbitmq.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vention.notification_service.dto.GeneralDto;
+import com.vention.notification_service.dto.GeneralDTO;
 import com.vention.notification_service.dto.NotificationDTO;
 import com.vention.notification_service.service.NotificationRetrieveService;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +20,21 @@ public class RabbitMQConsumer {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @RabbitListener(queues = "${rabbitmq.queue.authorization-service}")
-    public void processConfirmationTokenMessage(GeneralDto<?> generalDto){
+    public void processConfirmationTokenMessage(GeneralDTO<?> generalDto){
         convertToNotificationDTOAndSave(generalDto);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.dispute-service}")
-    public void processDisputeCreationMessage(GeneralDto<?> generalDto) {
+    public void processDisputeCreationMessage(GeneralDTO<?> generalDto) {
         convertToNotificationDTOAndSave(generalDto);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.core-service}")
-    public void processOrderStatusUpdateMessage(GeneralDto<?> generalDto){
+    public void processOrderStatusUpdateMessage(GeneralDTO<?> generalDto){
         convertToNotificationDTOAndSave(generalDto);
     }
 
-    private void convertToNotificationDTOAndSave(GeneralDto<?> generalDto) {
+    private void convertToNotificationDTOAndSave(GeneralDTO<?> generalDto) {
         try {
             Map body = (Map) generalDto.getBody();
             NotificationDTO dto = NotificationDTO.builder()

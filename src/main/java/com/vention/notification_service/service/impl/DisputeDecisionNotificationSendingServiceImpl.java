@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vention.general.lib.exceptions.BadRequestException;
 import com.vention.notification_service.domain.NotificationEntity;
 import com.vention.notification_service.domain.enums.NotificationType;
-import com.vention.notification_service.dto.OrderStatusChangeDto;
+import com.vention.notification_service.dto.OrderStatusChangeDTO;
 import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
 import jakarta.mail.MessagingException;
@@ -23,7 +23,7 @@ import org.thymeleaf.context.Context;
 @Service
 @RequiredArgsConstructor
 public class DisputeDecisionNotificationSendingServiceImpl implements MailSendingService {
-    private static final Logger log = LoggerFactory.getLogger(OrderStatusChangeSendingServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DisputeDecisionNotificationSendingServiceImpl.class);
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
@@ -36,7 +36,7 @@ public class DisputeDecisionNotificationSendingServiceImpl implements MailSendin
     @Async
     @Override
     public void send(NotificationEntity notification) {
-        OrderStatusChangeDto data = getObjectValues(notification.getData());
+        OrderStatusChangeDTO data = getObjectValues(notification.getData());
         sendEmail(notification.getEmail(), createOrderStatusChangeMessage(data, CUSTOMER_DESCRIPTION), notification);
         sendEmail(data.getDriverEmail(), createOrderStatusChangeMessage(data, COURIER_DESCRIPTION), notification);
     }
@@ -60,16 +60,16 @@ public class DisputeDecisionNotificationSendingServiceImpl implements MailSendin
         }
     }
 
-    private OrderStatusChangeDto getObjectValues(String data) {
+    private OrderStatusChangeDTO getObjectValues(String data) {
         try {
-            return objectMapper.readValue(data, OrderStatusChangeDto.class);
+            return objectMapper.readValue(data, OrderStatusChangeDTO.class);
         } catch (JsonProcessingException e) {
             log.warn("Error during processing json: " + e.getMessage());
             throw new BadRequestException("Error during processing json: " + e.getMessage());
         }
     }
 
-    private String createOrderStatusChangeMessage(OrderStatusChangeDto dto, String description) {
+    private String createOrderStatusChangeMessage(OrderStatusChangeDTO dto, String description) {
         Context context = new Context();
         context.setVariable("description", String.format(description, dto.getTrackNumber(),  dto.getStatus()));
         return templateEngine.process("dispute-decision", context);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ConfirmationTokenDto {
+public class ConfirmationTokenDTO {
 
     @JsonProperty("email")
     private String email;

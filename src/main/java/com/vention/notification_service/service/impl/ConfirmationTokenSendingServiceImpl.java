@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vention.notification_service.domain.NotificationEntity;
 import com.vention.notification_service.domain.enums.NotificationType;
-import com.vention.notification_service.dto.ConfirmationTokenDto;
+import com.vention.notification_service.dto.ConfirmationTokenDTO;
 import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -36,7 +36,7 @@ public class ConfirmationTokenSendingServiceImpl implements MailSendingService {
     @Override
     public void send(NotificationEntity notification) {
         String email = notification.getEmail();
-        ConfirmationTokenDto data = getObjectValues(notification.getData());
+        ConfirmationTokenDTO data = getObjectValues(notification.getData());
         String confirmationLink = generateConfirmationLink(Objects.requireNonNull(data));
         try {
             MimeMessage mailMessage = mailSender.createMimeMessage();
@@ -55,9 +55,9 @@ public class ConfirmationTokenSendingServiceImpl implements MailSendingService {
         }
     }
 
-    private ConfirmationTokenDto getObjectValues(String obj) {
+    private ConfirmationTokenDTO getObjectValues(String obj) {
         try {
-            return objectMapper.readValue(obj, ConfirmationTokenDto.class);
+            return objectMapper.readValue(obj, ConfirmationTokenDTO.class);
         } catch (JsonProcessingException e) {
             log.warn("Error during processing json: " + e.getMessage());
         }
@@ -69,7 +69,7 @@ public class ConfirmationTokenSendingServiceImpl implements MailSendingService {
         return this.type;
     }
 
-    private String generateConfirmationLink(ConfirmationTokenDto tokenDto) {
+    private String generateConfirmationLink(ConfirmationTokenDTO tokenDto) {
         Dotenv dotenv = Dotenv.load();
         String url = dotenv.get("CONFIRMATION_API_URL");
         return url + "?token=" + tokenDto.getToken();
