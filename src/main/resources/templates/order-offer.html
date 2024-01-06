@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer for Order</title>
+</head>
+<body style="font-family: 'Arial', sans-serif; background-color: #f8f8f8; margin: 0; padding: 0;">
+
+<div style="max-width: 600px; margin: auto; padding: 20px; text-align: center; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h2 style="color: #333; margin-bottom: 20px;">New Offer for Order</h2>
+
+    <p style="color: #666;" th:text="${description}"></p>
+    <p style="color: #444; margin-bottom: 20px;">Order details:</p>
+
+    <p style="color: #666;"><strong>Offer from:</strong> <span th:text="${senderName}"></span></p>
+
+    <p style="color: #666;"><strong>Starting place:</strong> <a th:text="${startingPlace}"></a></p>
+
+    <p style="color: #666;"><strong>Final place:</strong> <span th:text="${finalPlace}"></span></p>
+
+    <p style="color: #666;"><strong>Date:</strong> <span th:text="${date}"></span></p>
+
+    <p style="color: #666;"><strong>Item description:</strong> <span th:text="${itemDescription}"></span></p>
+
+    <div style="margin-top: 20px; display: flex; justify-content: space-around;">
+        <a th:href="${approveLink}" style="text-decoration: none;">
+            <button style="display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Approve</button>
+        </a>
+        <a th:href="${rejectLink}" style="text-decoration: none;">
+            <button style="display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #f44336; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Reject</button>
+        </a>
+    </div>
+
+</div>
+</body>
+</html>

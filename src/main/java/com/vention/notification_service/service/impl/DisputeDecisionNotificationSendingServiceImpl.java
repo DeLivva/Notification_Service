@@ -27,7 +27,7 @@ public class DisputeDecisionNotificationSendingServiceImpl implements MailSendin
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final NotificationType type = NotificationType.ORDER_STATUS_CHANGE;
+    private final NotificationType type = NotificationType.DISPUTE_DECISION;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String CUSTOMER_DESCRIPTION = "Your dispute created for order with truck number %s changed status to %s.";
