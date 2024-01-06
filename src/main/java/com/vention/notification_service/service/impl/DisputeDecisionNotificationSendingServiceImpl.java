@@ -10,7 +10,7 @@ import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,8 +21,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Service
-@AllArgsConstructor
-public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
+@RequiredArgsConstructor
+public class DisputeDecisionNotificationSendingServiceImpl implements MailSendingService {
     private static final Logger log = LoggerFactory.getLogger(OrderStatusChangeSendingServiceImpl.class);
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
@@ -30,8 +30,8 @@ public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
     private final NotificationType type = NotificationType.ORDER_STATUS_CHANGE;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final String CUSTOMER_DESCRIPTION = "Your order with truck number %s changed status to %s.";
-    private static final String COURIER_DESCRIPTION = "The order you have picked up with truck number %s changed status to %s.";
+    private static final String CUSTOMER_DESCRIPTION = "Your dispute created for order with truck number %s changed status to %s.";
+    private static final String COURIER_DESCRIPTION = "The dispute created for order you have picked up with truck number %s changed status to %s.";
 
     @Async
     @Override
@@ -41,14 +41,15 @@ public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
         sendEmail(data.getDriverEmail(), createOrderStatusChangeMessage(data, COURIER_DESCRIPTION), notification);
     }
 
-    private void sendEmail(String recipientEmail, String text, NotificationEntity notification) {
+    private void sendEmail(String recipientEmail, String emailMessage, NotificationEntity notification) {
         try {
             MimeMessage mailMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
 
             helper.setTo(recipientEmail);
-            helper.setSubject("Order Status updated");
-            helper.setText(text, true);
+
+            helper.setSubject("Dispute decision");
+            helper.setText(emailMessage, true);
 
             mailSender.send(mailMessage);
             service.makeSent(notification);
@@ -71,7 +72,7 @@ public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
     private String createOrderStatusChangeMessage(OrderStatusChangeDto dto, String description) {
         Context context = new Context();
         context.setVariable("description", String.format(description, dto.getTrackNumber(),  dto.getStatus()));
-        return templateEngine.process("order-status-change", context);
+        return templateEngine.process("dispute-decision", context);
     }
 
     @Override
