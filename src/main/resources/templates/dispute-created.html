@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery man picks up</title>
+    <title>Close dispute</title>
 </head>
 <body style="font-family: Arial, sans-serif;">
 <div style="max-width: 600px; margin: auto; padding: 20px; text-align: center; background-color: #f4f4f4; border-radius: 10px;">
-    <h2 style="color: #333;">Deliveryman has picked up your package</h2>
-    <p style="color: #666;">Click on the button to see the position of your package:</p>
+    <h2 style="color: #333;" th:text="${headerText}">Your dispute status has changed to </h2>
+    <p style="color: #666;" th:text="${disputeFromTo}">Dispute was generated from to </p>
+    <p style="color: #666;" th:text="${description}">Description</p>
+    <p style="color: #666;">Click on the button to see the dispute status:</p>
     <a th:href="${link}" style="text-decoration: none;">
         <button style="display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
-            See the position
+            See the status
         </button>
     </a>
 </div>

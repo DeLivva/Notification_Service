@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-is_sent-column
+      author: Abdurauf
+      changes:
+        - addColumn:
+            tableName: notification
+            columns:
+              - column:
+                  name: is_sent
+                  type: boolean
+                  constraints:
+                    nullable: false
+        - addDefaultValue:
+            columnDataType: boolean
+            tableName: notification
+            columnName: is_sent
+            defaultValueBoolean: false
+        - dropColumn:
+            tableName: notification
+            columnName: description
+        - addColumn:
+            tableName: notification
+            columns:
+              - column:
+                  name: msg_data
+                  type: JSONB
+                  constraints:
+                    nullable: false
+        - dropColumn:
+            columnName: type_id
+            tableName: notification
+        - dropTable:
+            tableName: notification_type
+        - addColumn:
+            tableName: notification
+            columns:
+              - column:
+                  name: type
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+        - dropTable:
+            tableName: user_notifications
+        - addColumn:
+            tableName: notification
+            columns:
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    nullable: false

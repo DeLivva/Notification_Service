@@ -1,16 +1,15 @@
 package com.vention.notification_service.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class DisputeCreatedNotificationDTO {
     private Long disputeId;
     private Long orderId;
     private String ownerName;
     private String driverName;
     private String description;
+    private List<String> adminEmails;
 }

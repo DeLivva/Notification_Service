@@ -1,10 +1,9 @@
 package com.vention.notification_service.service;
 
-import com.vention.notification_service.dto.ConfirmationTokenDto;
-import com.vention.notification_service.dto.DisputeCreatedNotificationDTO;
+import com.vention.notification_service.domain.NotificationEntity;
+import com.vention.notification_service.domain.enums.NotificationType;
 
 public interface MailSendingService {
-    void sendConfirmationToken(ConfirmationTokenDto tokenDto);
-
-    void sendDisputeCreationMessage(DisputeCreatedNotificationDTO disputeCreationDto);
+    void send(NotificationEntity notification);
+    NotificationType getType();
 }
