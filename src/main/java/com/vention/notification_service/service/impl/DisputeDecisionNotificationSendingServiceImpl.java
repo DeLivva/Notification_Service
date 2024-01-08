@@ -11,8 +11,7 @@ import com.vention.notification_service.service.NotificationRetrieveService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -20,14 +19,13 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DisputeDecisionNotificationSendingServiceImpl implements MailSendingService {
-    private static final Logger log = LoggerFactory.getLogger(DisputeDecisionNotificationSendingServiceImpl.class);
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final NotificationType type = NotificationType.DISPUTE_DECISION;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String CUSTOMER_DESCRIPTION = "Your dispute created for order with truck number %s changed status to %s.";
@@ -77,6 +75,6 @@ public class DisputeDecisionNotificationSendingServiceImpl implements MailSendin
 
     @Override
     public NotificationType getType() {
-        return this.type;
+        return NotificationType.DISPUTE_DECISION;
     }
 }

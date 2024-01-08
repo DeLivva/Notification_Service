@@ -11,8 +11,7 @@ import com.vention.notification_service.service.NotificationRetrieveService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -20,14 +19,13 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
-    private static final Logger log = LoggerFactory.getLogger(OrderStatusChangeSendingServiceImpl.class);
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final NotificationType type = NotificationType.ORDER_STATUS_CHANGE;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String CUSTOMER_DESCRIPTION = "Your order with truck number %s changed status to %s.";
@@ -76,6 +74,6 @@ public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
 
     @Override
     public NotificationType getType() {
-        return this.type;
+        return NotificationType.ORDER_STATUS_CHANGE;
     }
 }

@@ -12,8 +12,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -21,14 +20,13 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderOfferSendingServiceImpl implements MailSendingService {
-    private static final Logger log = LoggerFactory.getLogger(OrderOfferSendingServiceImpl.class);
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final NotificationType type = NotificationType.ORDER_OFFER;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String CUSTOMER_DESCRIPTION = "A new offer from courier %s for your order with truck number %s.";
@@ -99,6 +97,6 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
     }
     @Override
     public NotificationType getType() {
-        return this.type;
+        return NotificationType.ORDER_OFFER;
     }
 }

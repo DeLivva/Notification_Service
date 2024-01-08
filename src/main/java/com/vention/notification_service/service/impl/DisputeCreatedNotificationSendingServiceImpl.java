@@ -11,8 +11,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,16 +21,15 @@ import org.thymeleaf.context.Context;
 
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DisputeCreatedNotificationSendingServiceImpl implements MailSendingService {
-    private static final Logger log = LoggerFactory.getLogger(DisputeCreatedNotificationSendingServiceImpl.class);
     private static final String HEADER_TEXT = "Dispute was created for order number #%d.";
     private static final String FROM_TO = "Dispute was generated from %s to %s.";
     private final NotificationRetrieveService service;
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final NotificationType type = NotificationType.DISPUTE_CREATION;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Async
@@ -70,7 +68,7 @@ public class DisputeCreatedNotificationSendingServiceImpl implements MailSending
 
     @Override
     public NotificationType getType() {
-        return this.type;
+        return NotificationType.DISPUTE_CREATION;
     }
 
     private DisputeCreatedNotificationDTO getObjectValues(String data) {
