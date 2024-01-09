@@ -74,9 +74,12 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
     }
 
     private String createOrderOfferMessage(OrderOfferDTO dto, String description) {
+        String fullName = dto.getUserSender().getFirstName() + " " + dto.getUserSender().getLastName();
         Context context = new Context();
-        context.setVariable("description", String.format(description, dto.getSenderName(), dto.getTrackNumber()));
-        context.setVariable("senderName", dto.getSenderName());
+        context.setVariable("description", String.format(description, fullName, dto.getTrackNumber()));
+        context.setVariable("senderName", fullName);
+        context.setVariable("email", dto.getUserSender().getEmail());
+        context.setVariable("phoneNumber", dto.getUserSender().getPhoneNumber());
         context.setVariable("startingPlace", dto.getStartLocation());
         context.setVariable("finalPlace", dto.getFinalLocation());
         context.setVariable("date", dto.getDeliveryDate());

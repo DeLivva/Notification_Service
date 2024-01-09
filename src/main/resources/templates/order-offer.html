@@ -11,9 +11,14 @@
     <h2 style="color: #333; margin-bottom: 20px;">New Offer for Order</h2>
 
     <p style="color: #666;" th:text="${description}"></p>
-    <p style="color: #444; margin-bottom: 20px;">Order details:</p>
 
     <p style="color: #666;"><strong>Offer from:</strong> <span th:text="${senderName}"></span></p>
+
+    <p style="color: #666;"><strong>Email:</strong> <span th:text="${email}"></span></p>
+
+    <p style="color: #666;"><strong>Phone number:</strong> <span th:text="${phoneNumber}"></span></p>
+
+    <p style="color: #444; margin-bottom: 20px;">Order details:</p>
 
     <p style="color: #666;"><strong>Starting place:</strong> <a th:text="${startingPlace}"></a></p>
 
@@ -23,7 +28,7 @@
 
     <p style="color: #666;"><strong>Item description:</strong> <span th:text="${itemDescription}"></span></p>
 
-    <div style="margin-top: 20px; display: flex; justify-content: space-around;">
+    <div style="margin-top: 20px; display: flex; justify-content: center;">
         <a th:href="${approveLink}" style="text-decoration: none;">
             <button style="display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Approve</button>
         </a>
