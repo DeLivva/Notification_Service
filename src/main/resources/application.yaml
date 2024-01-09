@@ -45,3 +45,10 @@ cloud:
 
 jwt:
   secret-key: 753778214125442A472IkphdZSIsImasV4cCIee6MTY4sdNzUwMTQwN3F452848567890iuyiu67567886578uyutuio78654678976549eyJS678965467uior678545
+
+urls:
+  confirmation-api: http://Delivva-testing-environment-env.eba-jighrhr6.us-east-1.elasticbeanstalk.com/api/v1/auth/confirm-email
+  dispute-api: http://Delivva-testing-environment-env.eba-jighrhr6.us-east-1.elasticbeanstalk.com/api/v1/disputes/
+  order-offer-reject: http://Delivva-core-env.eba-n3sj6avt.eu-north-1.elasticbeanstalk.com/api/v1/orders/cancel
+  order-offer-approve: http://Delivva-core-env.eba-n3sj6avt.eu-north-1.elasticbeanstalk.com/api/v1/orders/approve-offer
+

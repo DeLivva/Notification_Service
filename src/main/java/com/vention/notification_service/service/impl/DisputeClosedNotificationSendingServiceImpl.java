@@ -7,11 +7,11 @@ import com.vention.notification_service.domain.enums.NotificationType;
 import com.vention.notification_service.dto.DisputeClosedNotificationDTO;
 import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -29,7 +29,8 @@ public class DisputeClosedNotificationSendingServiceImpl implements MailSendingS
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    @Value("${urls.dispute-api}")
+    private String url;
     @Async
     @Override
     public void send(NotificationEntity notification) {
@@ -63,8 +64,6 @@ public class DisputeClosedNotificationSendingServiceImpl implements MailSendingS
     }
 
     private String generateGetDisputeLink(Long orderId) {
-        Dotenv dotenv = Dotenv.load();
-        String url = dotenv.get("DISPUTE_API_URL");
         return url + "?orderId=" + orderId;
     }
 
