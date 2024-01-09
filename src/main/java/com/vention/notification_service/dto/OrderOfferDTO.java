@@ -2,7 +2,7 @@ package com.vention.notification_service.dto;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 public class OrderOfferDTO {
@@ -11,7 +11,7 @@ public class OrderOfferDTO {
     private String senderName;
     private String startLocation;
     private String finalLocation;
-    private Timestamp deliveryDate;
+    private Date deliveryDate;
     private String description;
     private String trackNumber;
     private String sender;
