@@ -32,8 +32,6 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
     @Value("${urls.order-offer-approve}")
     private String approveUrl;
 
-    @Value("${urls.order-offer-reject}")
-    private String rejectUrl;
     private static final String CUSTOMER_DESCRIPTION = "A new offer from courier %s for your order with truck number %s.";
     private static final String COURIER_DESCRIPTION = "New offer from customer %s for order with truck number %s.";
 
@@ -84,16 +82,11 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
         context.setVariable("date", dto.getDeliveryDate());
         context.setVariable("itemDescription", dto.getDescription());
         context.setVariable("approveLink", generateApproveLink(dto));
-        context.setVariable("rejectLink", generateRejectLink(dto));
         return templateEngine.process("order-offer", context);
     }
 
     private String generateApproveLink(OrderOfferDTO orderOfferDTO) {
         return approveUrl + "?userId=" + orderOfferDTO.getUserId() + "&orderId=" + orderOfferDTO.getId();
-    }
-
-    private String generateRejectLink(OrderOfferDTO orderOfferDTO) {
-        return rejectUrl + "?userId=" + orderOfferDTO.getUserId() + "&orderId=" + orderOfferDTO.getId();
     }
 
     @Override
