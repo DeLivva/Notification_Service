@@ -33,3 +33,10 @@ rabbitmq:
     authorization-service: authorization_service_queue
     dispute-service: dispute_service_queue
     core-service: core_service_queue
+
+cloud:
+  auth-service:
+    url: http://Delivva-testing-environment-env.eba-jighrhr6.us-east-1.elasticbeanstalk.com
+
+jwt:
+  secret-key: 753778214125442A472IkphdZSIsImasV4cCIee6MTY4sdNzUwMTQwN3F452848567890iuyiu67567886578uyutuio78654678976549eyJS678965467uior678545

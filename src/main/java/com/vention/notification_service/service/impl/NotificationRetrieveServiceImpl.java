@@ -2,9 +2,12 @@ package com.vention.notification_service.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vention.general.lib.exceptions.DataNotFoundException;
 import com.vention.notification_service.domain.NotificationEntity;
 import com.vention.notification_service.domain.enums.NotificationType;
 import com.vention.notification_service.dto.NotificationDTO;
+import com.vention.notification_service.dto.NotificationResponseDTO;
+import com.vention.notification_service.mappers.NotificationMapper;
 import com.vention.notification_service.repository.NotificationRepository;
 import com.vention.notification_service.service.NotificationRetrieveService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import java.util.List;
 public class NotificationRetrieveServiceImpl implements NotificationRetrieveService {
     private final NotificationRepository notificationRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final NotificationMapper mapper;
 
     @Override
     public List<NotificationEntity> getNotSentNotifications() {
@@ -48,5 +52,15 @@ public class NotificationRetrieveServiceImpl implements NotificationRetrieveServ
     public void makeSent(NotificationEntity notificationEntity) {
         notificationEntity.setIsSent(true);
         notificationRepository.save(notificationEntity);
+    }
+
+    @Override
+    public NotificationEntity getById(Long id) {
+        return notificationRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Notification not found with id: " + id));
+    }
+
+    @Override
+    public List<NotificationResponseDTO> getNotSentNotificationsDTO() {
+        return mapper.mapEntitiesToDTOs(getNotSentNotifications());
     }
 }
