@@ -7,11 +7,11 @@ import com.vention.notification_service.domain.enums.NotificationType;
 import com.vention.notification_service.dto.ConfirmationTokenDTO;
 import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -29,6 +29,8 @@ public class ConfirmationTokenSendingServiceImpl implements MailSendingService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${urls.confirmation-api}")
+    private String url;
 
     @Async
     @Override
@@ -68,8 +70,6 @@ public class ConfirmationTokenSendingServiceImpl implements MailSendingService {
     }
 
     private String generateConfirmationLink(ConfirmationTokenDTO tokenDto) {
-        Dotenv dotenv = Dotenv.load();
-        String url = dotenv.get("CONFIRMATION_API_URL");
         return url + "?token=" + tokenDto.getToken();
     }
 

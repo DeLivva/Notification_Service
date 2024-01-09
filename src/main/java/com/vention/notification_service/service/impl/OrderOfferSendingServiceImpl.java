@@ -8,11 +8,11 @@ import com.vention.notification_service.domain.enums.NotificationType;
 import com.vention.notification_service.dto.OrderOfferDTO;
 import com.vention.notification_service.service.MailSendingService;
 import com.vention.notification_service.service.NotificationRetrieveService;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -29,6 +29,11 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
     private final TemplateEngine templateEngine;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${urls.order-offer-approve}")
+    private String approveUrl;
+
+    @Value("${urls.order-offer-reject}")
+    private String rejectUrl;
     private static final String CUSTOMER_DESCRIPTION = "A new offer from courier %s for your order with truck number %s.";
     private static final String COURIER_DESCRIPTION = "New offer from customer %s for order with truck number %s.";
 
@@ -84,17 +89,13 @@ public class OrderOfferSendingServiceImpl implements MailSendingService {
     }
 
     private String generateApproveLink(OrderOfferDTO orderOfferDTO) {
-        return generateLink(orderOfferDTO, "ORDER_OFFER_APPROVE_URL");
+        return approveUrl + "?userId=" + orderOfferDTO.getUserId() + "&orderId=" + orderOfferDTO.getId();
     }
 
     private String generateRejectLink(OrderOfferDTO orderOfferDTO) {
-        return generateLink(orderOfferDTO, "ORDER_OFFER_REJECT_URL");
+        return rejectUrl + "?userId=" + orderOfferDTO.getUserId() + "&orderId=" + orderOfferDTO.getId();
     }
-    private String generateLink(OrderOfferDTO orderOfferDTO, String urlKey) {
-        Dotenv dotenv = Dotenv.load();
-        String url = dotenv.get(urlKey);
-        return url + "?userId=" + orderOfferDTO.getUserId() + "&orderId=" + orderOfferDTO.getId();
-    }
+
     @Override
     public NotificationType getType() {
         return NotificationType.ORDER_OFFER;
