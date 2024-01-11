@@ -49,4 +49,4 @@ jwt:
 urls:
   confirmation-api: https://delivva-angular.vercel.app/confirm
   dispute-api: http://Delivva-testing-environment-env.eba-jighrhr6.us-east-1.elasticbeanstalk.com/api/v1/disputes/
-  order-offer-approve: http://Delivva-core-env.eba-n3sj6avt.eu-north-1.elasticbeanstalk.com/api/v1/orders/approve-offer
+  order-offer-approve: https://delivva-angular.vercel.app/approve-offer
