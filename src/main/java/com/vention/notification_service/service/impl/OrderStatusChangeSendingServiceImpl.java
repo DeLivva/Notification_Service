@@ -36,9 +36,10 @@ public class OrderStatusChangeSendingServiceImpl implements MailSendingService {
     public void send(NotificationEntity notification) {
         OrderStatusChangeDTO data = getObjectValues(notification.getData());
         sendEmail(notification.getEmail(), createOrderStatusChangeMessage(data, CUSTOMER_DESCRIPTION), notification);
-        sendEmail(data.getDriverEmail(), createOrderStatusChangeMessage(data, COURIER_DESCRIPTION), notification);
+        if (data.getDriverEmail() != null) {
+            sendEmail(data.getDriverEmail(), createOrderStatusChangeMessage(data, COURIER_DESCRIPTION), notification);
+        }
     }
-
     private void sendEmail(String recipientEmail, String text, NotificationEntity notification) {
         try {
             MimeMessage mailMessage = mailSender.createMimeMessage();
